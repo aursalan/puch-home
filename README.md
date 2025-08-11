@@ -1,3 +1,14 @@
+---
+title: Job Finder & Smart Home MCP Server
+emoji: 🤖
+colorFrom: blue
+sdk: docker
+sdk_version: 3.11
+app_file: main.py
+app_port: 8086
+---
+
+
 # 🚀 Puch Home: Your Portable Smart Home AI 
 
 Welcome to **Puch Home**—the next evolution in smart home control, powered by Puch AI and Model Context Protocol (MCP)!  
