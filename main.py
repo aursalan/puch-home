@@ -163,32 +163,91 @@ class SmartCommandRequest(BaseModel):
     command: str
     params: dict | None = None
 
-# --- Lightweight parser (was missing) ---
+# --- Smart Command Parser ---
 def parse_smart_command(user_text: str) -> dict | None:
-    t = user_text.lower()
+    t = user_text.lower().strip()
+
+    # Turn On triggers
+    turn_on_phrases = [
+        "turn on", "switch on", "power on", "activate", "enable", "light up",
+        "start", "boot up", "fire up", "initiate", "run", "begin", "wake up",
+        "bring online", "turn my", "turn the", "switch my", "switch the",
+        "make it on", "get it going", "launch", "kickstart", "ignite",
+        "let there be light", "resume power", "switch it on", "turn this on",
+        "plug in", "give power", "flip the switch", "power it up"
+    ]
+
+    # Turn Off triggers
+    turn_off_phrases = [
+        "turn off", "switch off", "power off", "deactivate", "disable", "shut down",
+        "stop", "cut off", "turn my", "turn the", "kill", "halt", "pause", "end",
+        "put to sleep", "cut the power", "switch my", "switch the", "unplug",
+        "remove power", "stop running", "power it down", "turn this off", "shut the",
+        "flip the switch off", "dark mode", "kill the lights"
+    ]
+
+    # Set Temperature triggers
+    set_temp_phrases = [
+        "set temperature", "set thermostat", "change temperature", "adjust temperature",
+        "temperature to", "thermostat to", "heat to", "cool to", "make it", "set it to",
+        "increase temperature", "decrease temperature", "raise temp", "lower temp",
+        "set degrees", "make it warmer", "make it colder", "chill to", "warm to",
+        "set climate to", "adjust climate", "set ac to", "set heater to",
+        "set the room temp", "bring temp to", "temp at", "set room to"
+    ]
+
+    # Status Check triggers
+    status_phrases = [
+        "status", "state", "is the", "check", "show", "tell me", "report",
+        "how is", "current state", "what's the", "is my", "condition of", "give me status",
+        "get status", "how's the", "is it working", "is it on", "is it off",
+        "show me if", "are we online", "how's it going", "update me", "what's up with"
+    ]
+
+    # Reboot triggers
+    reboot_phrases = [
+        "reboot", "restart", "reset", "power cycle", "reload", "re initialize",
+        "refresh", "boot again", "turn it off and on", "cycle power", "re launch",
+        "hard reset", "soft reset", "re kick", "system restart", "system reboot",
+        "reset cam", "reset device", "reset this", "reboot this", "refresh the"
+    ]
+
+    # Take Snapshot triggers
+    snapshot_phrases = [
+        "snapshot", "picture", "photo", "image", "take a picture", "take photo",
+        "capture", "grab image", "record still", "take snapshot", "show me the view",
+        "take a shot", "snap a photo", "camera shot", "screen capture", "cam shot",
+        "shoot", "snap it", "grab a frame", "freeze frame", "click a photo",
+        "photograph", "take image", "see the camera", "view from", "what camera sees",
+        "live view", "get me a shot", "look at camera", "show picture", "record image"
+    ]
+
+    # Detect action
     action = None
-    if any(p in t for p in ("turn on", "switch on")):
+    if any(p in t for p in turn_on_phrases):
         action = "turn_on"
-    elif any(p in t for p in ("turn off", "switch off")):
+    elif any(p in t for p in turn_off_phrases):
         action = "turn_off"
-    elif ("set" in t and ("temperature" in t or "thermostat" in t)) or re.search(r"\bset .* to \d{2}\b", t):
+    elif any(p in t for p in set_temp_phrases) or re.search(r"\bset .* to \d{2}\b", t):
         action = "set_temperature"
-    elif any(p in t for p in ("status", "state", "is the")):
+    elif any(p in t for p in status_phrases):
         action = "get_status"
-    elif "reboot" in t:
+    elif any(p in t for p in reboot_phrases):
         action = "reboot"
-    elif any(p in t for p in ("snapshot", "picture", "photo")):
+    elif any(p in t for p in snapshot_phrases):
         action = "take_snapshot"
 
     if not action:
         return None
 
+    # Match device by name or alias
     device_id = None
     for dev in _SMART_HOME_DEVICE_STORE.values():
         if dev.name.lower() in t or any(alias in t for alias in dev.aliases):
             device_id = dev.id
             break
 
+    # Extract temperature if needed
     params: dict = {}
     if action == "set_temperature":
         m = re.search(r"(\d{2})\b", t)
@@ -197,29 +256,28 @@ def parse_smart_command(user_text: str) -> dict | None:
 
     return {"device_id": device_id, "command": action, "params": params}
 
+
 # --- In-memory device store (unchanged) ---
 _SMART_HOME_DEVICE_STORE: dict[str, SmartDevice] = {
-    "dev-lamp-1": SmartDevice(id="dev-lamp-1", name="Desk Lamp", aliases=["desk lamp", "lamp"], type="light", capabilities=["on_off"]),
-    "dev-therm-1": SmartDevice(id="dev-therm-1", name="Living Thermostat", aliases=["thermostat"], type="thermostat", capabilities=["set_temperature"]),
-    "dev-plug-1": SmartDevice(id="dev-plug-1", name="Coffee Plug", aliases=["coffee maker"], type="plug", capabilities=["on_off"]),
-    "real-cam-1": SmartDevice(id="real-cam-1", name="Security Camera", aliases=["camera", "security cam"], type="camera", capabilities=["reboot", "get_status", "take_snapshot"]),
+    "lamp": SmartDevice(id="lamp", name="Desk Lamp", aliases=["desk lamp", "lamp"], type="light", capabilities=["on_off"]),
+    "therm": SmartDevice(id="therm", name="Living-Room Thermostat", aliases=["thermostat"], type="thermostat", capabilities=["set_temperature","on_off"]),
+    "plug": SmartDevice(id="plug", name="Coffee Plug", aliases=["coffee maker"], type="plug", capabilities=["on_off"]),
+    "cam": SmartDevice(id="cam", name="Security Camera", aliases=["camera", "security cam"], type="camera", capabilities=["reboot", "get_status", "take_snapshot"]),
 }
 
 # --- RichToolDescription for Smart Home Tools ---
 SMART_HOME_DISCOVER_DESCRIPTION = RichToolDescription(
-    description="Scan and list all connected smart home devices (both mock and real).",
+    description="Scan and list all connected smart home devices.",
     use_when="Use this tool when the user needs to see which devices are available and their capabilities before sending a command.",
     side_effects="None — only returns a list of devices and their details."
 )
 
 SMART_HOME_COMMAND_DESCRIPTION = RichToolDescription(
     description=(
-        "Control smart home devices by either:\n"
-        "1. Sending a structured SmartCommandRequest (for precise automation)\n"
-        "2. Sending a plain-language text command (e.g., 'turn on desk lamp').\n\n"
+        "Control smart home devices by sending a plain-language text command."
         "Supports lights, plugs, thermostats, and ONVIF-compatible security cameras."
     ),
-    use_when="Use this when the user wants to turn devices on/off, set temperatures, check status, reboot a camera, or take snapshots.",
+    use_when="Use this when the user wants to turn devices on/off, set temperatures, check status of devices, reboot a camera, or take snapshots or pictures of camera.",
     side_effects=(
         "May change device states such as turning devices on/off, changing thermostat temperature, "
         "or rebooting a camera. Camera snapshot commands will return an image."
@@ -246,7 +304,7 @@ async def smart_home_command(
     command_text: Annotated[str, Field(description="Plain-language command like 'turn on desk lamp'")]
 ) -> Union[str, list[ImageContent]]:
     if not command_text:
-        raise McpError(ErrorData(code=INVALID_PARAMS, message="Please provide a plain text command."))
+        raise McpError(ErrorData(code=INVALID_PARAMS, message="Please provide a text command."))
 
     parsed = parse_smart_command(command_text)
     if not parsed:
@@ -288,7 +346,7 @@ async def smart_home_command(
             mycam = ONVIFCamera(CAMERA_IP, ONVIF_PORT, ONVIF_USER, ONVIF_PASS)
             await resolve_awaitable(mycam.update_xaddrs())
 
-            if req.command == "take_snapshot":
+            if req.command == "take_snapshot" OR "":
                 media_service = await resolve_awaitable(mycam.create_media_service())
                 profiles = await resolve_awaitable(media_service.GetProfiles())
                 if not profiles:
