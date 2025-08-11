@@ -124,29 +124,28 @@ class Fetch:
 
 # --- MCP Server Setup ---
 mcp = FastMCP(
-    "Puch Home",
+    "Puch Home: Smart Home Control Server — Powered by Puch AI",
     auth=SimpleBearerAuthProvider(TOKEN),
 )
 
 # --- Server details --- 
 @mcp.tool
-async def about() -> dict[str,str]:
-    server_name = "Puch Home: Smart Home Control Server — Powered by Puch AI"
-    server_description = dedent("""
-        Control your smart devices instantly from anywhere — without downloading a single app.
-        This server integrates seamlessly with Puch AI, letting you:
-        - Discover devices (cameras, smart plugs, routers, and more) in seconds.
-        - (Beta )Add new devices instantly — no complex setup.
-        - Operate everything via text commands in WhatsApp.
-        
-        Why it’s awesome:
-        - No latency — commands execute in under 3 seconds.
-        - No expensive hubs or extra hardware needed.
-        - Works across brands and device types.
-    """)
-    
-    return { "name" : server_name, "description": server_description }
-
+async def about() -> dict:
+    return {
+        "name": mcp.name,
+        "description": dedent("""
+            Control your smart devices instantly from anywhere — without downloading a single app.
+            This server integrates seamlessly with Puch AI, letting you:
+            - Discover devices (cameras, smart plugs, routers, and more) in seconds.
+            - (Beta) Add new devices instantly — no complex setup.
+            - Operate everything via text commands in WhatsApp.
+            
+            Why it’s awesome:
+            - No latency — commands execute in under 3 seconds.
+            - No expensive hubs or extra hardware needed.
+            - Works across brands and device types.
+        """).strip()
+    }
 
 # --- Tool: validate (required by Puch) ---
 @mcp.tool
