@@ -257,7 +257,7 @@ def parse_smart_command(user_text: str) -> dict | None:
     return {"device_id": device_id, "command": action, "params": params}
 
 
-# --- In-memory device store (unchanged) ---
+# --- In-memory device store ---
 _SMART_HOME_DEVICE_STORE: dict[str, SmartDevice] = {
     "lamp": SmartDevice(id="lamp", name="Desk Lamp", aliases=["desk lamp", "lamp"], type="light", capabilities=["on_off"]),
     "therm": SmartDevice(id="therm", name="Living-Room Thermostat", aliases=["thermostat"], type="thermostat", capabilities=["set_temperature","on_off"]),
@@ -265,13 +265,21 @@ _SMART_HOME_DEVICE_STORE: dict[str, SmartDevice] = {
     "cam": SmartDevice(id="cam", name="Security Camera", aliases=["camera", "security cam"], type="camera", capabilities=["reboot", "get_status", "take_snapshot"]),
 }
 
-# --- RichToolDescription for Smart Home Tools ---
+# --- Smart home discover tool ---
 SMART_HOME_DISCOVER_DESCRIPTION = RichToolDescription(
     description="Scan and list all connected smart home devices.",
     use_when="Use this tool when the user needs to see which devices are available and their capabilities before sending a command.",
     side_effects="None — only returns a list of devices and their details."
 )
 
+@mcp.tool(description=SMART_HOME_DISCOVER_DESCRIPTION.model_dump_json())
+async def smart_home_discover() -> str:
+    lines = ["Discovered devices:"]
+    for d in _SMART_HOME_DEVICE_STORE.values():
+        lines.append(f"- {d.id} | {d.name} | aliases={d.aliases} | type={d.type} | caps={d.capabilities} | online={d.online}")
+    return "\n".join(lines)
+
+# --- Smart home command tool  ---
 SMART_HOME_COMMAND_DESCRIPTION = RichToolDescription(
     description=(
         "Control smart home devices by sending a plain-language text command."
@@ -284,21 +292,6 @@ SMART_HOME_COMMAND_DESCRIPTION = RichToolDescription(
     )
 )
 
-SMART_HOME_ADD_DEVICE_DESCRIPTION = RichToolDescription(
-    description="Add a new mock smart device into the system for testing or demonstration purposes.",
-    use_when="Use this tool when you want to simulate a new smart device without using real hardware.",
-    side_effects="Updates the in-memory device store, making the new device available for control."
-)
-
-# --- Discover tool ---
-@mcp.tool(description=SMART_HOME_DISCOVER_DESCRIPTION.model_dump_json())
-async def smart_home_discover() -> str:
-    lines = ["Discovered devices:"]
-    for d in _SMART_HOME_DEVICE_STORE.values():
-        lines.append(f"- {d.id} | {d.name} | aliases={d.aliases} | type={d.type} | caps={d.capabilities} | online={d.online}")
-    return "\n".join(lines)
-
-# --- Unified smart home command tool (TEXT ONLY) ---
 @mcp.tool(description=SMART_HOME_COMMAND_DESCRIPTION.model_dump_json())
 async def smart_home_command(
     command_text: Annotated[str, Field(description="Plain-language command like 'turn on desk lamp'")]
@@ -401,7 +394,13 @@ async def smart_home_command(
 
     raise McpError(ErrorData(code=INVALID_PARAMS, message=f"Unsupported command '{req.command}' for device type '{device.type}'"))
 
-# --- Add device helper ---
+# --- Smart home add device tool ---
+SMART_HOME_ADD_DEVICE_DESCRIPTION = RichToolDescription(
+    description="Add a new mock smart device into the system for testing or demonstration purposes.",
+    use_when="Use this tool when you want to simulate a new smart device without using real hardware.",
+    side_effects="Updates the in-memory device store, making the new device available for control."
+)
+
 @mcp.tool(description=SMART_HOME_ADD_DEVICE_DESCRIPTION.model_dump_json())
 async def smart_home_add_device(
     id: Annotated[str, Field(description="Unique device id e.g. dev-xyz")],
