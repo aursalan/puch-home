@@ -240,32 +240,25 @@ async def smart_home_discover() -> str:
         lines.append(f"- {d.id} | {d.name} | aliases={d.aliases} | type={d.type} | caps={d.capabilities} | online={d.online}")
     return "\n".join(lines)
 
-# --- Unified smart home command tool ---
+# --- Unified smart home command tool (TEXT ONLY) ---
 @mcp.tool(description=SMART_HOME_COMMAND_DESCRIPTION.model_dump_json())
 async def smart_home_command(
-    command_text: Annotated[str | None, Field(description="Plain-language command like 'turn on desk lamp'")] = None,
-    req: Annotated[SmartCommandRequest | None, Field(description="Structured smart-home command payload")] = None
+    command_text: Annotated[str, Field(description="Plain-language command like 'turn on desk lamp'")]
 ) -> Union[str, list[ImageContent]]:
-    # Reject ambiguous calls
-    if command_text and req:
-        raise McpError(ErrorData(code=INVALID_PARAMS, message="Provide either command_text OR req, not both."))
+    if not command_text:
+        raise McpError(ErrorData(code=INVALID_PARAMS, message="Please provide a plain text command."))
 
-    # If plain text provided — parse it
-    if command_text:
-        parsed = parse_smart_command(command_text)
-        if not parsed:
-            return "Sorry — I couldn't parse that. Try: 'turn on desk lamp' or 'set thermostat to 24'."
-        if not parsed["device_id"]:
-            return "Device not found in your device list. Run 'smart_home_discover' to see device names you can use."
-        req = SmartCommandRequest(
-            device_id=parsed["device_id"],
-            command=parsed["command"],
-            params=parsed["params"] or {},
-        )
+    parsed = parse_smart_command(command_text)
+    if not parsed:
+        return "Sorry — I couldn't parse that. Try: 'turn on desk lamp' or 'set thermostat to 24'."
+    if not parsed["device_id"]:
+        return "Device not found in your device list. Run 'smart_home_discover' to see device names you can use."
 
-    # If neither text nor structured request given
-    if not req:
-        raise McpError(ErrorData(code=INVALID_PARAMS, message="Please provide either a command_text or a structured req."))
+    req = SmartCommandRequest(
+        device_id=parsed["device_id"],
+        command=parsed["command"],
+        params=parsed["params"] or {},
+    )
 
     device = _SMART_HOME_DEVICE_STORE.get(req.device_id)
     if not device:
@@ -280,7 +273,7 @@ async def smart_home_command(
         if req.command == "get_status":
             return f"OK: Mock {device.name} is {'online' if device.online else 'offline'}"
         if req.command == "set_temperature":
-            temp = req.params.get("temperature") if req.params else None
+            temp = req.params.get("temperature")
             if temp is None:
                 raise McpError(ErrorData(code=INVALID_PARAMS, message="Missing temperature"))
             return f"OK: Mock {device.name} temperature set to {temp}°C"
