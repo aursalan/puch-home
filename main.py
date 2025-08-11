@@ -1,3 +1,4 @@
+# --- Import required packages --- 
 import asyncio
 from typing import Annotated, List, Literal, Union
 import os
@@ -19,14 +20,13 @@ import datetime
 from onvif import ONVIFCamera, exceptions
 import zeep.cache
 zeep.cache.SqliteCache = zeep.cache.InMemoryCache
+from textwrap import dedent
 
 # --- Load environment variables ---
 load_dotenv()
 
 TOKEN = os.environ.get("AUTH_TOKEN")
 MY_NUMBER = os.environ.get("MY_NUMBER")
-
-print(f"--- SERVER TOKEN ON STARTUP: [{TOKEN}] ---")
 
 assert TOKEN is not None, "Please set AUTH_TOKEN in your .env file"
 assert MY_NUMBER is not None, "Please set MY_NUMBER in your .env file"
@@ -54,7 +54,7 @@ class RichToolDescription(BaseModel):
     use_when: str
     side_effects: str | None = None
 
-# --- Fetch Utility Class (unchanged) ---
+# --- Fetch Utility Class ---
 class Fetch:
     USER_AGENT = "Puch/1.0 (Autonomous)"
 
@@ -124,9 +124,29 @@ class Fetch:
 
 # --- MCP Server Setup ---
 mcp = FastMCP(
-    "Job Finder MCP Server",
+    "Puch Home",
     auth=SimpleBearerAuthProvider(TOKEN),
 )
+
+# --- Server details --- 
+@mcp.tool
+async def about() -> dict[str,str]:
+    server_name = "Puch Home: Smart Home Control Server — Powered by Puch AI"
+    server_description = dedent("""
+        Control your smart devices instantly from anywhere — without downloading a single app.
+        This server integrates seamlessly with Puch AI, letting you:
+        - Discover devices (cameras, smart plugs, routers, and more) in seconds.
+        - (Beta )Add new devices instantly — no complex setup.
+        - Operate everything via text commands in WhatsApp.
+        
+        Why it’s awesome:
+        - No latency — commands execute in under 3 seconds.
+        - No expensive hubs or extra hardware needed.
+        - Works across brands and device types.
+    """)
+    
+    return { "name" : server_name, "description": server_description }
+
 
 # --- Tool: validate (required by Puch) ---
 @mcp.tool
@@ -139,17 +159,13 @@ async def resolve_awaitable(obj):
         return await obj
     return obj
 
-# -----------------------------
-# Smart Home: tools (with camera integration)
-# -----------------------------
-
 # --- Load Camera Credentials ---
 CAMERA_IP = os.getenv("CAMERA_IP")
 ONVIF_PORT = int(os.getenv("ONVIF_PORT", 8000))
 ONVIF_USER = os.getenv("ONVIF_USER")
 ONVIF_PASS = os.getenv("ONVIF_PASS")
 
-# --- Models that were missing earlier ---
+# --- Models ---
 class SmartDevice(BaseModel):
     id: str
     name: str
