@@ -17,6 +17,8 @@ import cv2
 import base64
 import datetime
 from onvif import ONVIFCamera, exceptions
+import zeep.cache
+zeep.cache.SqliteCache = zeep.cache.InMemoryCache
 
 # --- Load environment variables ---
 load_dotenv()
