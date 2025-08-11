@@ -305,6 +305,7 @@ async def smart_home_execute(
 
     # --- MOCK DEVICE LOGIC ---
     if device.type in ["light", "plug", "thermostat"]:
+        # ... (this part is unchanged)
         if req.command == "turn_on": return f"OK: Mock {device.name} is now ON"
         if req.command == "turn_off": return f"OK: Mock {device.name} is now OFF"
         if req.command == "get_status": return f"OK: Mock {device.name} is {'online' if device.online else 'offline'}"
@@ -312,51 +313,56 @@ async def smart_home_execute(
             temp = req.params.get("temperature") if req.params else None
             if temp is None: raise McpError(ErrorData(code=INVALID_PARAMS, message="Missing temperature"))
             return f"OK: Mock {device.name} temperature set to {temp}°C"
-    
+
     # --- REAL CAMERA LOGIC ---
     if device.type == "camera":
         if not all([CAMERA_IP, ONVIF_USER, ONVIF_PASS]):
             return "Error: Camera credentials are not configured on the server."
-        
+
         try:
+            print(f"[{datetime.datetime.now()}] DEBUG: Starting camera command '{req.command}'")
             mycam = ONVIFCamera(CAMERA_IP, ONVIF_PORT, ONVIF_USER, ONVIF_PASS)
-            
-            # The .update_xaddrs() call may or may not return a coroutine.
+            print(f"[{datetime.datetime.now()}] DEBUG: ONVIFCamera object created.")
+
             await resolve_awaitable(mycam.update_xaddrs())
-            
+            print(f"[{datetime.datetime.now()}] DEBUG: update_xaddrs() complete.")
+
             if req.command == "take_snapshot":
                 media_service = await resolve_awaitable(mycam.create_media_service())
-                if not media_service:
-                    return "Error: Could not create media service for camera."
+                print(f"[{datetime.datetime.now()}] DEBUG: Media service created.")
 
                 profiles = await resolve_awaitable(media_service.GetProfiles())
-                if not profiles:
-                    return "Error: No media profiles found on camera."
+                print(f"[{datetime.datetime.now()}] DEBUG: Profiles retrieved.")
 
                 token = profiles[0].token
                 uri_request = media_service.create_type('GetStreamUri')
                 uri_request.ProfileToken = token
                 uri_request.StreamSetup = {'Stream': 'RTP-Unicast', 'Transport': {'Protocol': 'RTSP'}}
-                
+
                 uri_response = await resolve_awaitable(media_service.GetStreamUri(uri_request))
                 stream_uri = uri_response.Uri
+                print(f"[{datetime.datetime.now()}] DEBUG: Stream URI received.")
 
                 if ONVIF_USER and ONVIF_PASS:
                     parts = stream_uri.split('://')
                     stream_uri = f"{parts[0]}://{ONVIF_USER}:{ONVIF_PASS}@{parts[1]}"
 
+                print(f"[{datetime.datetime.now()}] DEBUG: Connecting to video stream with OpenCV...")
                 cap = cv2.VideoCapture(stream_uri)
                 if not cap.isOpened():
                     return "Error: Could not open camera stream with OpenCV."
+                print(f"[{datetime.datetime.now()}] DEBUG: VideoCapture opened. Reading frame...")
 
                 ret, frame = cap.read()
                 cap.release()
+                print(f"[{datetime.datetime.now()}] DEBUG: Frame read. Success={ret}. Releasing capture.")
 
                 if not ret:
                     return "Error: Failed to read a frame from the camera stream."
 
                 _, buffer = cv2.imencode('.png', frame)
                 img_base64 = base64.b64encode(buffer).decode('utf-8')
+                print(f"[{datetime.datetime.now()}] DEBUG: Frame encoded. Returning image.")
 
                 return [ImageContent(type="image", mimeType="image/png", data=img_base64)]
 
