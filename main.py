@@ -346,7 +346,7 @@ async def smart_home_command(
             mycam = ONVIFCamera(CAMERA_IP, ONVIF_PORT, ONVIF_USER, ONVIF_PASS)
             await resolve_awaitable(mycam.update_xaddrs())
 
-            if req.command == "take_snapshot" OR "":
+            if req.command == "take_snapshot":
                 media_service = await resolve_awaitable(mycam.create_media_service())
                 profiles = await resolve_awaitable(media_service.GetProfiles())
                 if not profiles:
