@@ -173,22 +173,6 @@ Check the [official docs](https://puch.ai/mcp) for examples and protocol details
 
 ---
 
-## 🛠️ Included Tools (from MCP Starter)
-
-### 🎯 Job Finder Tool
-- **Analyze job descriptions**: Paste any job description and get smart insights
-- **Fetch job postings from URLs**: Give a job posting link and get the full details
-- **Search for jobs**: Use natural language to find relevant job opportunities
-
-### 🖼️ Image Processing Tool
-- **Convert images to black & white**: Upload any image and get a monochrome version
-
-### 🛡️ Security Camera Snap (ONVIF)
-- **Get a real snapshot from your security camera!**  
-  (Hackathon MVP: only one preconfigured camera, but architecture supports future expansion)
-
----
-
 ## 🔧 Troubleshooting & Debug
 
 - Use `/mcp diagnostics-level debug` in Puch AI to get detailed error messages.
