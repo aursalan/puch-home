@@ -1,16 +1,16 @@
-# 🚀 Puch Home: Smart Home Control Server — Powered by Puch AI
+# 🏡 Puch Home: Smart Home Control Server — Powered by Puch AI
 
 Welcome to **Puch Home**—the next evolution in smart home control, powered by Puch AI and Model Context Protocol (MCP)!  
 No more waiting for slow apps or juggling dozens of vendor platforms. With Puch Home, you control your devices with a single sentence—anywhere, anytime.
 
 ---
 
-## 🌟 What Makes Puch Home Different?
+## ✨ What Makes Puch Home Different?
 
 ### ⚡ Instant, Flexible Smart Home Control
-Tired of waiting for apps to load just to turn off a light or fan?  
-Puch Home lets you send a single message (from WhatsApp) to control devices instantly.  
-No lag. No app installs. No limits.
+- Tired of waiting for apps to load just to turn off a light or fan?  
+- Puch Home lets you send a single message (from WhatsApp) to control devices instantly.  
+- No lag. No app installs. No limits.
 
 ### 🧠 Powered by MCP + Puch AI
 - **Model Context Protocol (MCP)** safely connects your AI to real-world devices and tools.
@@ -24,7 +24,7 @@ No lag. No app installs. No limits.
 
 ## 🚨 Real-Time Security Camera Integration (MVP Feature)
 
-Puch Home now includes a real-time snapshot feature using ONVIF and a security camera.  
+Puch Home includes a real-time snapshot feature using ONVIF and a security camera.  
 - Get a live image from a security cam sent straight to your phone.
 - **Note:** This is an MVP feature—currently only a pre-configured security camera is supported (due to hackathon time constraints).  
 - **Future Scope:** Full support for adding/removing your own devices is planned. For now, you get a taste of real-world integration beyond just mock/demo data!
@@ -85,7 +85,7 @@ Copy and edit your `.env` file:
 
 ```bash
 cp .env.example .env
-# Edit AUTH_TOKEN and MY_NUMBER in .env
+# Edit AUTH_TOKEN and MY_NUMBER and more variables in .env
 ```
 
 ### 3. Start the Server
@@ -126,6 +126,23 @@ Now, you’re ready to control your home from anywhere, in natural language!
 - Your `.env` should include:
   - `AUTH_TOKEN=your_secret_token_here`
   - `MY_NUMBER=919876543210` (your WhatsApp number, with country code)
+
+---
+
+## 📷 Camera Preconfiguration
+
+For the real security camera snapshot feature to work, you need to preconfigure your camera settings in the `.env` file.
+
+Add the following variables to your `.env`:
+
+- `CAMERA_IP=192.168.1.1`  (IP address of your ONVIF-compatible camera)
+- `ONVIF_PORT=8000`             (Port of the camera, usually 8000)
+- `ONVIF_USER=admin`          (Camera username)
+- `ONVIF_PASS=your_camera_password` (Camera password)
+
+> **Note:**  
+> These credentials are used to access your camera and fetch snapshots.  
+> Only a single camera is supported in the current MVP version.
 
 ---
 
