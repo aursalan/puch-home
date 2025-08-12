@@ -5,6 +5,12 @@ No more waiting for slow apps or juggling dozens of vendor platforms. With Puch 
 
 ---
 
+## 📹 Demo
+
+![](assets/demo.gif)
+
+---
+
 ## ✨ What Makes Puch Home Different?
 
 ### ⚡ Instant, Flexible Smart Home Control
