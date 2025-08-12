@@ -24,10 +24,9 @@ No lag. No app installs. No limits.
 
 ## 🚨 Real-Time Security Camera Integration (MVP Feature)
 
-**New for Hackathon!**  
 Puch Home now includes a real-time snapshot feature using ONVIF and a security camera.  
 - Get a live image from a security cam sent straight to your phone.
-- **Note:** This is an MVP feature—currently only a pre-configured security camera is supported (due to hackathon time constraints and lack of open IOT APIs).  
+- **Note:** This is an MVP feature—currently only a pre-configured security camera is supported (due to hackathon time constraints).  
 - **Future Scope:** Full support for adding/removing your own devices is planned. For now, you get a taste of real-world integration beyond just mock/demo data!
 
 ---
@@ -58,15 +57,13 @@ Puch Home now includes a real-time snapshot feature using ONVIF and a security c
 - **One-Sentence Commands:**  
   "Turn off the bedroom light", "Switch on the fan"—just say it.
 - **Remote Device Control:**  
-  Works over WhatsApp or Puch AI, even when away from home.
+  Works over WhatsApp, even when away from home.
 - **Security Camera Snapshots (ONVIF):**  
   Get a real photo from your security camera, instantly.
 - **No Vendor Lock-In:**  
   Future-proof: control multiple brands from one place.
 - **No App Overload:**  
   Ditch the clutter. One tool, every device.
-- **Job Search & Image Processing Tools Included:**  
-  Use built-in tools for job hunting and image editing (from the original MCP starter).
 
 ---
 
