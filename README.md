@@ -58,155 +58,48 @@ Puch Home includes a real-time snapshot feature using ONVIF and a security camer
 
 ---
 
-## 🛠️ Features
+## Table of Contents
 
-- **One-Sentence Commands:**  
-  "Turn off the bedroom light", "Switch on the fan"—just say it.
-- **Remote Device Control:**  
-  Works over WhatsApp, even when away from home.
-- **Security Camera Snapshots (ONVIF):**  
-  Get a real photo from your security camera, instantly.
-- **No Vendor Lock-In:**  
-  Future-proof: control multiple brands from one place.
-- **No App Overload:**  
-  Ditch the clutter. One tool, every device.
+- [Project Description](#🏡-puch-home-smart-home-control-server--powered-by-puch-ai)
+- [How to Install and Run the Project](#how-to-install-and-run-the-project)
+- [How to Use the Project](#how-to-use-the-project)
+- [Acknowledgements](#acknowledgements)
+- [License](#license)
 
----
+## How to Install and Run the Project
 
-## 🚦 Quickstart
+This project is built to run on your local machine, and was developed during a hackathon.
 
-### 1. Clone & Set Up
+To run it yourself:
+- Clone the repository:  
+  `git clone https://github.com/aursalan/puch-home.git`
+- Create and activate a virtual environment:  
+  `uv venv`  
+  `uv sync`  
+  `source .venv/bin/activate`
+- Configure the `.env` file for authentication and device settings:  
+  `cp .env.example .env`  
+  *Edit* `AUTH_TOKEN`, `MY_NUMBER`, camera variables in `.env`
+- Start the MCP server:  
+  `cd mcp-bearer-token`  
+  `python mcp_starter.py`
+- (Optional) Expose your server publicly with ngrok:  
+  `ngrok http 8086`
 
-```bash
-git clone https://github.com/aursalan/puch-home.git
-cd puch-home
-uv venv
-uv sync
-source .venv/bin/activate
-```
+**No additional setup is required for basic functionality if dependencies are installed.**
 
-### 2. Configure Environment
+## How to Use the Project
 
-Copy and edit your `.env` file:
+Once the server is running:
+- Connect with Puch AI via WhatsApp using the provided `/mcp connect` command.
+- Control your smart home devices and request security camera snapshots in natural language.
+- Demo data is used for most device actions; real camera snapshots require ONVIF configuration in `.env`.
 
-```bash
-cp .env.example .env
-# Edit AUTH_TOKEN and MY_NUMBER and more variables in .env
-```
+## Acknowledgements
 
-### 3. Start the Server
+ - [Official Puch AI MCP Documentation](https://puch.ai/mcp)
+ - [JSON-RPC 2.0 Spec](https://www.jsonrpc.org/specification)
 
-```bash
-cd mcp-bearer-token
-python mcp_starter.py
-```
-
-You'll see: `🚀 Starting MCP server on http://0.0.0.0:8086`
-
-### 4. Make Your Server Public
-
-Expose your server with [ngrok](https://ngrok.com/download):
-
-```bash
-ngrok http 8086
-```
-
----
-
-## 🤖 Connect with Puch AI
-
-1. **[Open Puch AI on WhatsApp](https://wa.me/+919998881729)**
-2. **Send the connect command:**
-
-   ```
-   /mcp connect https://your-ngrok-url.ngrok.app/mcp your_secret_token_here
-   ```
-
-Now, you’re ready to control your home from anywhere, in natural language!
-
----
-
-## 🔐 Authentication
-
-- **Bearer token authentication** is required by Puch AI for all MCP servers.
-- Your `.env` should include:
-  - `AUTH_TOKEN=your_secret_token_here`
-  - `MY_NUMBER=919876543210` (your WhatsApp number, with country code)
-
----
-
-## 📷 Camera Preconfiguration
-
-For the real security camera snapshot feature to work, you need to preconfigure your camera settings in the `.env` file.
-
-Add the following variables to your `.env`:
-
-- `CAMERA_IP=192.168.1.1`  (IP address of your ONVIF-compatible camera)
-- `ONVIF_PORT=8000`             (Port of the camera, usually 8000)
-- `ONVIF_USER=admin`          (Camera username)
-- `ONVIF_PASS=your_camera_password` (Camera password)
-
-> **Note:**  
-> These credentials are used to access your camera and fetch snapshots.  
-> Only a single camera is supported in the current MVP version.
-
----
-
-## 🏗️ Extend & Customize
-
-Want to add more tools?  
-Just define new tool functions with `@mcp.tool` in `mcp_starter.py`.  
-For example:
-
-```python
-@mcp.tool(description="Your tool description")
-async def your_tool_name(
-    parameter: Annotated[str, Field(description="Parameter description")]
-) -> str:
-    # Your tool logic here
-    return "Tool result"
-```
-
-Check the [official docs](https://puch.ai/mcp) for examples and protocol details!
-
----
-
-## 📚 Documentation & Resources
-
-### Guides & References
-- [Official Puch AI MCP Documentation](https://puch.ai/mcp)
-- [Join the Discord](https://discord.gg/VMCnMvYx)
-- [JSON-RPC 2.0 Spec](https://www.jsonrpc.org/specification)
-
-### Supported vs Unsupported Features
-
-**✓ Supported:**
-- Core protocol messages
-- Tool definitions and calls
-- Authentication (Bearer & OAuth)
-- Error handling
-
-**✗ Not Supported:**
-- Videos extension
-- Resources extension
-- Prompts extension
-
----
-
-## 🔧 Troubleshooting & Debug
-
-- Use `/mcp diagnostics-level debug` in Puch AI to get detailed error messages.
-- For server logs, check your running process console.
-
----
-
-## 🚀 Build with Puch!
-
-This project started as a hackathon experiment.  
-Now, it’s your turn—fork it, remix it, and make your smart home truly smart.  
-Tag your builds with **#BuildWithPuch**!
-
-**Happy hacking!**
-
-
----
+## License
+This project is licensed under the [MIT](LICENSE) License.
+````
