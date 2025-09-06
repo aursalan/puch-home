@@ -1,60 +1,10 @@
-# 🏡 Puch Home: Smart Home Control Server — Powered by Puch AI
+# 🏡 Puch Home: Smart Home Control Server 
 
-Welcome to **Puch Home**—the next evolution in smart home control, powered by Puch AI and Model Context Protocol (MCP)!  
-No more waiting for slow apps or juggling dozens of vendor platforms. With Puch Home, you control your devices with a single sentence—anywhere, anytime.
+Puch Home is a next-generation smart home control server that brings simplicity, speed, and true intelligence to your home automation experience. By leveraging Puch AI and the Model Context Protocol (MCP), Puch Home lets you control all your devices using natural language—just send a message from WhatsApp to toggle your lights, fans, or other smart appliances instantly.
 
----
+No more waiting for slow apps or switching between different vendor platforms. Puch Home is built for real convenience: one interface, one sentence, full control. The platform is vendor-agnostic, designed for easy expansion, and provides real-time features like security camera snapshots using ONVIF.
 
-## 📹 Demo
-
-![](assets/demo.gif)
-
----
-
-## ✨ What Makes Puch Home Different?
-
-### ⚡ Instant, Flexible Smart Home Control
-- Tired of waiting for apps to load just to turn off a light or fan?  
-- Puch Home lets you send a single message (from WhatsApp) to control devices instantly.  
-- No lag. No app installs. No limits.
-
-### 🧠 Powered by MCP + Puch AI
-- **Model Context Protocol (MCP)** safely connects your AI to real-world devices and tools.
-- **Puch AI integration** means you can use natural language—no technical jargon needed.
-
-### 🌍 Vendor-Agnostic, Always Growing
-- One interface for all your smart devices (multi-vendor support coming soon).
-- Turn your phone into a portable Alexa—even when you’re not home.
-
----
-
-## 🚨 Real-Time Security Camera Integration (MVP Feature)
-
-Puch Home includes a real-time snapshot feature using ONVIF and a security camera.  
-- Get a live image from a security cam sent straight to your phone.
-- **Note:** This is an MVP feature—currently only a pre-configured security camera is supported (due to hackathon time constraints).  
-- **Future Scope:** Full support for adding/removing your own devices is planned. For now, you get a taste of real-world integration beyond just mock/demo data!
-
----
-
-## ⚠️ Demo Data Notice
-
-> **Note:**  
-> The current version of Puch Home works with _demo data for most device actions_.  
-> Device toggling is simulated for demonstration, **except for the real security camera snapshot (ONVIF)**.
->
-> **Future Scope:**  
-> The architecture is being built for true remote control, automation, and multi-device management—all from one tool.  
-> Stay tuned as real device logic and multi-vendor APIs are added!
-
----
-
-## 💡 Why This Project?
-
-> This started as a personal hackathon project to solve a real pain:  
-> "Why should I wait for an app to load just to turn something on or off?"  
-> With Puch Home, your AI listens and acts, no matter where you are.  
-> It’s your voice-powered remote for the whole smart world!
+Whether you're at home or away, you can manage your smart devices and receive instant feedback—all with powerful AI integration and a seamless user experience. Puch Home is your voice-powered remote for a truly smart home.
 
 ---
 
