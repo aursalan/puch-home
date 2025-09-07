@@ -24,9 +24,9 @@
 
 ## 1. Tech Stack and Prerequisites
 
-**Frontend:** WhatsApp (Puch AI)
-**Backend:** Python
-**Prerequisites** Python 3.x, Git, ngrok
+**Frontend:** WhatsApp (Puch AI)\
+**Backend:** Python\
+**Prerequisites:** Python 3.x, Git, ngrok
 
 
 ## 2. How to Install and Run the Project
