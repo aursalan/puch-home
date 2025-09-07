@@ -1,5 +1,4 @@
-
-# Puch Home: Smart Home Control MCP Server
+# 🏠 Puch Home: Smart Home Control MCP Server
 
 > Puch Home is a next-generation smart home control model context protocol server that brings simplicity, speed, and intelligence to your home automation. By leveraging Puch AI, it can enable seamless, vendor-agnostic control of your smart devices from a single, unified interface.
 
