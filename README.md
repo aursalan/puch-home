@@ -1,103 +1,108 @@
-# 🏡 Puch Home: Smart Home Control Server
 
-Puch Home is a next-generation smart home control server that brings simplicity, speed, and true intelligence to your home automation experience. By leveraging Puch AI and the Model Context Protocol (MCP), it enables seamless, vendor-agnostic control of your smart devices—all from a unified interface.
+# Puch Home: Smart Home Control MCP Server
 
-No more waiting for slow apps or switching vendor platforms. Puch Home is built for real convenience: one interface, one sentence, full control. Whether you're at home or away, you can manage your smart devices and receive instant feedback—all with powerful AI integration and a seamless user experience.
+> Puch Home is a next-generation smart home control model context protocol server that brings simplicity, speed, and intelligence to your home automation. By leveraging Puch AI, it enables seamless, vendor-agnostic control of your smart devices-all from a single, unified interface.
 
----
+- **Unified Control:** Manage all your smart home devices, regardless of the brand, from one place.
+
+- **Natural Language Commands:** Use simple sentences to control your home through any messaging app connected to Puch AI.
+
+- **Instant & Remote Access:** No more slow, clunky vendor apps. Get instant feedback and control whether you're at home or away.
+
+- **AI-Powered:** Built on the Puch AI and Model Context Protocol (MCP) for a truly intelligent and responsive experience.
+## Demo
+
+![](/assets/demo.gif)
+
 
 ## Table of Contents
 
-- [Project Description](#project-description)
-- [Installation & Running](#installation--running)
-- [Usage](#usage)
-- [Acknowledgements](#acknowledgements)
-- [License](#license)
+* [Tech Stack and Prerequisites](#tech-stack-and-prerequisites)
+* [How to Install and Run the Project](#how-to-install-and-run-the-project)
+* [How to Use the Project](#how-to-use-the-project)
+* [Future Improvements](#future-improvements)
+* [Acknowledgements](#acknowledgements)
+* [License](#license)
+## Tech Stack and Prerequisites
 
----
+**Frontend:** WhatsApp (Puch AI)
 
-## Project Description
+**Backend:** Python
 
-Puch Home connects your smart home devices and lets you control them using natural language, via Puch AI. It supports various device types and integrates with your preferred messaging platform.
+**Prerequisites** Python 3.x, Git, ngrok
 
----
 
-## Installation & Running
+## How to Install and Run the Project
 
-Follow these steps to get started:
-
-### 1. Clone the repository
-
-```bash
+1. Clone the Repository
+```
 git clone https://github.com/aursalan/puch-home.git
 cd puch-home
 ```
 
-### 2. Create and activate a Python virtual environment
-
-```bash
+2. Create and activate a Python virtual environment:
+```
+# For macOS/Linux
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate
+
+# For Windows
+python -m venv .venv
+.venv\Scripts\activate
 ```
 
-### 3. Set up environment variables
+3. Configure environment variables:
+- Copy the example environment file and edit it with your specific details (e.g., device credentials, authentication token).
+```
+cp eg.env .env
+```
 
-- Copy the example environment file and edit your configuration:
-
-  ```bash
-  cp eg.env .env
-  ```
-
-- Open `.env` in your favorite editor, and **change the numbers and authentication variables** as needed for your setup.
-
-### 4. Install dependencies
-
-```bash
+4. Install dependencies:
+```
 pip install -r requirements.txt
 ```
 
-### 5. Run the application
-
-```bash
+5. Start the application:
+```
 python main.py
 ```
 
-### 6. Expose your local server (optional, recommended for remote use)
-
-Use [ngrok](https://ngrok.com/) to expose your server:
-
-```bash
+6. Expose your local server (Recommended):
+- Use ngrok to create a public URL for your local server. This allows Puch AI to communicate with it from anywhere.
+```
 ngrok http 8000
 ```
-*(Replace `8000` with your server's port if different.)*
 
-### 7. Connect with Puch AI
-
-In your Puch AI chat, run:
-
+7. Connect Puch AI to your server:
+- In your Puch AI [chat](https://puch.ai/hi) send the following command, replacing the placeholders with your ngrok URL and the token you set in your .env file.
 ```
-/mcp connect <NGROK_URL/mcp> <TOKEN>
+/mcp connect <YOUR_NGROK_URL>/mcp <YOUR_TOKEN>
 ```
-Replace `<NGROK_URL/mcp>` with your public ngrok URL (e.g. `https://abcd1234.ngrok.io/mcp`) and `<TOKEN>` with your authentication token.
 
----
 
-## Usage
 
-- After setup, use Puch AI (e.g., through WhatsApp) to send commands to your smart home.
-- You can control devices with natural language and request camera snapshots.
-- For real device integration, ensure correct settings in your `.env` file.
-- Demo data is available for testing most device actions.
 
----
+## How to Use the Project
 
+Once the server is running and connected to Puch AI, you can start controlling your smart home devices by sending messages.
+
+- **Send Commands:** Use natural language to interact with your devices.
+    - "Turn on the living room light."
+
+    - "Set the bedroom thermostat to 22 degrees."
+
+    - "Show me a snapshot from the front door camera."
+
+- **Test with Demo Data:** The project includes demo data, allowing you to test commands and interactions without connecting real devices.
+##  Future Improvements
+
+- Support for a wider range of smart device brands and types (e.g., smart locks, blinds, speakers).
+
+- Creation of automated routines and scenes (e.g., a "Good Morning" scene that turns on lights and adjusts the thermostat).
+
+- Proactive AI suggestions based on user habits and contextual triggers.
 ## Acknowledgements
 
-- [Official Puch AI MCP Documentation](https://puch.ai/mcp)
-- [JSON-RPC 2.0 Spec](https://www.jsonrpc.org/specification)
-
----
-
+ - [Official Puch AI MCP Documentation](https://puch.ai/mcp)
 ## License
-
-This project is licensed under the [MIT](LICENSE) License.
+This project is licensed under the [Apache-2.0](LICENSE) License.
